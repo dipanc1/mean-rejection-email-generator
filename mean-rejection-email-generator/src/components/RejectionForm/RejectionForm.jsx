@@ -44,6 +44,18 @@ const RejectionForm = ({
             <p className="mt-4 text-xs text-gray-500 text-center">
                 Disclaimer: This is a joke! Don’t actually send these.
             </p>
+            {/* tone slider */}
+            <div className="mt-4">
+                <label className="block text-sm font-medium mb-1">Tone</label>
+                <input
+                    type="range"
+                    min="1"
+                    max="10"
+                    className="w-full"
+                    onChange={(e) => console.log(`Tone set to ${e.target.value}`)}
+                />
+                <p className="text-xs text-gray-500 text-center">Adjust the tone of the rejection email</p>
+            </div>
         </div>
     );
 };
