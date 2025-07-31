@@ -1,0 +1,20 @@
+{
+  "name": "mreg-api",
+  "version": "1.0.0",
+  "description": "this is the backend for mean email generator app",
+  "keywords": [
+    "node",
+    "mean",
+    "email",
+    "generator",
+    "fun",
+    "spooky"
+  ],
+  "license": "ISC",
+  "author": "dipan",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "test": "npm run test"
+  }
+}
