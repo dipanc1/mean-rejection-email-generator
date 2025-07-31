@@ -1,11 +1,12 @@
-
 const RejectionForm = ({
     candidateName,
     setCandidateName,
     companyName,
     setCompanyName,
     generateRejection,
-    rejection
+    rejection,
+    tone,
+    setTone
 }) => {
     return (
         <div className="max-w-md mx-auto mt-10 p-6 bg-gray-100 rounded-lg shadow-lg">
@@ -44,7 +45,6 @@ const RejectionForm = ({
             <p className="mt-4 text-xs text-gray-500 text-center">
                 Disclaimer: This is a joke! Don’t actually send these.
             </p>
-            {/* tone slider */}
             <div className="mt-4">
                 <label className="block text-sm font-medium mb-1">Tone</label>
                 <input
@@ -52,7 +52,8 @@ const RejectionForm = ({
                     min="1"
                     max="10"
                     className="w-full"
-                    onChange={(e) => console.log(`Tone set to ${e.target.value}`)}
+                    onChange={(e) => setTone(e.target.value)}
+                    value={tone}
                 />
                 <p className="text-xs text-gray-500 text-center">Adjust the tone of the rejection email</p>
             </div>

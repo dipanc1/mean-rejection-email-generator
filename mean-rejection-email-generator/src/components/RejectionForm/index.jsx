@@ -1,3 +1,3 @@
-import RejectionForm from "./RejectionForm";
+import RejectionForm from "./RejectionForm.container";
 
 export default RejectionForm;
