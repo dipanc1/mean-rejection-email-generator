@@ -11,15 +11,35 @@ router.get('/', async (req, res) => {
             return res.status(400).json({ message: 'Search query is required' });
         }
 
-        // Create a case-insensitive search regex
         const searchRegex = new RegExp(query, 'i');
 
-        // Search in name, domain, and country fields
         const companies = await CompanyTable
             .find({ name: searchRegex })
-            .limit(1);
+            .limit(5);
 
-        res.json(companies);
+        const uniqueCompanies = [];
+        const seenNames = new Set();
+        for (const company of companies) {
+            if (!seenNames.has(company.name)) {
+                seenNames.add(company.name);
+                uniqueCompanies.push(company);
+            }
+        }
+
+        if (uniqueCompanies.length === 0) {
+            return res.status(404).json({ message: 'No companies found' });
+        }
+
+        uniqueCompanies.sort((a, b) => a.name.localeCompare(b.name));
+
+        uniqueCompanies.forEach(company => {
+            company.name = company.name
+                .split(' ')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ');
+        });
+
+        res.status(200).json(uniqueCompanies);
     } catch (error) {
         console.error('Search error:', error);
         res.status(500).json({ message: 'Error searching companies' });
