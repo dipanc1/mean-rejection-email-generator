@@ -1,11 +1,14 @@
 import { useState } from "react";
 import RejectionForm from "./RejectionForm";
+import { searchCompanies } from "../../api";
 
 const RejectionFormContainer = () => {
     const [candidateName, setCandidateName] = useState('');
     const [companyName, setCompanyName] = useState('');
     const [rejection, setRejection] = useState('');
     const [tone, setTone] = useState(5);
+
+    const [companies, setCompanies] = useState([]);
 
     const meanTemplates = [
         "Dear CANDIDATE_NAME,\n\nWe got your application for COMPANY_NAME. It wasn’t good enough, so we’re picking other candidates.\n\nRegards,\nCOMPANY_NAME",
@@ -46,9 +49,27 @@ const RejectionFormContainer = () => {
 
         setCandidateName('');
         setCompanyName('');
-        setTone(5);
         setRejection(randomTemplate);
     };
+
+    const searchCompaniesApi = async (query) => {
+        if (!query) {
+            setCompanies([]);
+            setCompanyName('');
+            return;
+        }
+        try {
+            setCompanyName(query);
+            await searchCompanies(query)
+                .then(data => {
+                    setCompanies(data);
+                });
+
+        } catch (error) {
+            console.error('Error fetching companies:', error);
+        }
+    }
+
 
     return (
         <RejectionForm
@@ -60,6 +81,9 @@ const RejectionFormContainer = () => {
             rejection={rejection}
             tone={tone}
             setTone={setTone}
+            searchCompaniesApi={searchCompaniesApi}
+            companies={companies}
+            setCompanies={setCompanies}
         />
 
     );

@@ -6,7 +6,10 @@ const RejectionForm = ({
     generateRejection,
     rejection,
     tone,
-    setTone
+    setTone,
+    searchCompaniesApi,
+    companies,
+    setCompanies
 }) => {
     return (
         <div className="max-w-md mx-auto mt-10 p-6 bg-gray-100 rounded-lg shadow-lg">
@@ -26,10 +29,24 @@ const RejectionForm = ({
                 <input
                     type="text"
                     value={companyName}
-                    onChange={(e) => setCompanyName(e.target.value)}
+                    onChange={(e) => searchCompaniesApi(e.target.value)}
                     className="w-full p-2 border rounded"
                     placeholder="e.g., Acme Corp"
                 />
+
+                {companies.length > 0 && (
+                    <ul className="mt-2 bg-white border rounded shadow-lg absolute z-10">
+                        {companies.map((company, index) => (
+                            <li key={index} className="p-2 hover:bg-gray-100 cursor-pointer" onClick={() => {
+                                setCompanyName(company.name)
+                                setCompanies([]);
+                            }}>
+                                {company.name}
+                            </li>
+                        ))}
+                    </ul>
+                )}
+
             </div>
             <button
                 onClick={generateRejection}
@@ -56,6 +73,11 @@ const RejectionForm = ({
                     value={tone}
                 />
                 <p className="text-xs text-gray-500 text-center">Adjust the tone of the rejection email</p>
+                {
+                    (tone <= 3 && <p className="text-green-500 text-xl text-center">Mean</p>) ||
+                    (tone <= 7 && <p className="text-yellow-500 text-xl text-center">Meaner</p>) ||
+                    (tone > 7 && <p className="text-red-500 text-xl text-center">Meanest</p>)
+                }
             </div>
         </div>
     );

@@ -21,7 +21,7 @@ mongoose.connect(process.env.MONGODB_URI)
     });
 
 
-app.use('/api/search', searchRouter);
+app.use('/api/search-companies', searchRouter);
 
 // Start server
 const PORT = process.env.PORT || 3000;
