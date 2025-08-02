@@ -1,0 +1,71 @@
+const Auth = ({ isOpen, onClose, mode, modalRef, handleLogin, handleRegister, message, onSubmit }) => {
+    if (!isOpen) return null;
+
+    return (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div ref={modalRef} className="bg-white p-8 rounded-lg w-96 relative">
+                <button
+                    onClick={onClose}
+                    className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+                >
+                    ✕
+                </button>
+                <h2 className="text-2xl font-bold mb-6">
+                    {mode === 'login' ? 'Login' : 'Register'}
+                </h2>
+                <form className="space-y-4" onSubmit={onSubmit}>
+                    {mode === 'register' && (
+                        <>
+                            <div>
+                                <label className="block text-sm font-medium mb-1">First Name</label>
+                                <input
+                                    type="text"
+                                    className="w-full p-2 border rounded"
+                                    placeholder="Enter your first name"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium mb-1">Last Name</label>
+                                <input
+                                    type="text"
+                                    className="w-full p-2 border rounded"
+                                    placeholder="Enter your last name"
+                                />
+                            </div>
+                        </>
+                    )}
+                    <div>
+                        <label className="block text-sm font-medium mb-1">Email</label>
+                        <input
+                            type="email"
+                            className="w-full p-2 border rounded"
+                            placeholder="Enter your email"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium mb-1">Password</label>
+                        <input
+                            type="password"
+                            className="w-full p-2 border rounded"
+                            placeholder="Enter your password"
+                        />
+                    </div>
+                    <button
+                        type="submit"
+                        className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+                    >
+                        {mode === 'login' ? 'Login' : 'Register'}
+                    </button>
+                </form>
+
+                {message && (
+                    <div className="mt-4 p-2 bg-green-100 text-green-800 rounded">
+                        {message}
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+};
+
+export default Auth;

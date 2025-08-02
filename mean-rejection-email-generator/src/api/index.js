@@ -1,5 +1,8 @@
-import searchCompanies from "./RejectionEmail/search-companies.api"
+import searchCompanies from "./search-companies.api"
+import { login, register } from "./auth.api"
 
 export {
-    searchCompanies
+    searchCompanies,
+    login,
+    register
 }

@@ -1,7 +1,3 @@
-import RejectionForm from "./RejectionForm";
-import Navbar from "./Navbar";
-
-export {
-    RejectionForm,
-    Navbar
-}
+export { default as RejectionForm } from "./RejectionForm";
+export { default as Navbar } from "./Navbar";
+export { default as Auth } from "./Auth";
