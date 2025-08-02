@@ -10,6 +10,9 @@ app.use(express.json());
 app.use(cors());
 
 const searchRouter = require('./routes/search');
+const authRouter = require('./routes/auth');
+
+const protect = require('./middleware/authMiddleware');
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGODB_URI)
@@ -21,7 +24,8 @@ mongoose.connect(process.env.MONGODB_URI)
     });
 
 
-app.use('/api/search-companies', searchRouter);
+app.use('/api/auth', authRouter);
+app.use('/api/search-companies', protect, searchRouter);
 
 // Start server
 const PORT = process.env.PORT || 3000;

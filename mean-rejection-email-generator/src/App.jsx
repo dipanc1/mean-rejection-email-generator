@@ -1,8 +1,11 @@
-import { RejectionForm } from "./components";
+import { RejectionForm, Navbar } from "./components";
 
 function App() {
   return (
-    <RejectionForm />
+    <>
+      <Navbar />
+      <RejectionForm />
+    </>
   );
 }
 
