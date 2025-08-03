@@ -15,11 +15,15 @@ const NavbarContainer = () => {
         }
         setAuthMode('login');
         setShowAuth(true);
+        // Clear any open dropdowns when opening auth modal
+        window.dispatchEvent(new CustomEvent('clearDropdowns'));
     };
 
     const handleRegister = () => {
         setAuthMode('register');
         setShowAuth(true);
+        // Clear any open dropdowns when opening auth modal
+        window.dispatchEvent(new CustomEvent('clearDropdowns'));
     };
 
     const handleLogout = () => {

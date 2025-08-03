@@ -89,6 +89,7 @@ const RejectionFormContainer = () => {
             const token = localStorage.getItem('token');
             if (!token && !hasShownLoginPrompt) {
                 setHasShownLoginPrompt(true);
+                setCompanies([]); // Clear dropdown before showing error
                 setError('Please login to search companies');
                 return;
             }
@@ -98,11 +99,13 @@ const RejectionFormContainer = () => {
             }
             const data = await searchCompanies(query, token);
             if (data.error === 'Unauthorized') {
+                setCompanies([]); // Clear dropdown before showing error
                 setError('Your session has expired. Please login again.');
                 return;
             }
             setCompanies(data);
         } catch (error) {
+            setCompanies([]); // Clear dropdown before showing error
             setError('An error occurred while fetching companies');
         }
     }

@@ -17,12 +17,6 @@ export const AuthProvider = ({ children }) => {
         }
     }, []);
 
-    useEffect(() => {
-        if (!isLoggedIn) {
-            localStorage.setItem('demoCount', '0');
-        }
-    }, [isLoggedIn]);
-
     return (
         <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, user, setUser }}>
             {children}
