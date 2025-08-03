@@ -1,6 +1,7 @@
 import { useState } from "react";
 import RejectionForm from "./RejectionForm";
 import { searchCompanies } from "../../api";
+import ErrorPopup from "../ErrorPopup";
 
 const RejectionFormContainer = () => {
     const [candidateName, setCandidateName] = useState('');
@@ -9,6 +10,7 @@ const RejectionFormContainer = () => {
     const [tone, setTone] = useState(5);
 
     const [companies, setCompanies] = useState([]);
+    const [error, setError] = useState('');
 
     const meanTemplates = [
         "Dear CANDIDATE_NAME,\n\nWe got your application for COMPANY_NAME. It wasn’t good enough, so we’re picking other candidates.\n\nRegards,\nCOMPANY_NAME",
@@ -30,7 +32,13 @@ const RejectionFormContainer = () => {
 
     const generateRejection = () => {
         if (!candidateName || !companyName) {
-            setRejection('Please fill in both fields.');
+            setError('Please fill in both fields.');
+            return;
+        }
+
+        const token = localStorage.getItem('token');
+        if (!token) {
+            setError('You must be logged in to generate a rejection email.');
             return;
         }
 
@@ -60,32 +68,44 @@ const RejectionFormContainer = () => {
         }
         try {
             setCompanyName(query);
-            await searchCompanies(query)
-                .then(data => {
-                    setCompanies(data);
-                })
-
+            const token = localStorage.getItem('token');
+            if (!token) {
+                setCompanies([]);
+                setError('Please login to search companies');
+                return;
+            }
+            const data = await searchCompanies(query, token);
+            if (data.error === 'Unauthorized') {
+                setError('Your session has expired. Please login again.');
+                return;
+            }
+            setCompanies(data);
         } catch (error) {
-            console.error('Error fetching companies:', error);
+            setError('An error occurred while fetching companies');
         }
     }
 
 
     return (
-        <RejectionForm
-            candidateName={candidateName}
-            setCandidateName={setCandidateName}
-            companyName={companyName}
-            setCompanyName={setCompanyName}
-            generateRejection={generateRejection}
-            rejection={rejection}
-            tone={tone}
-            setTone={setTone}
-            searchCompaniesApi={searchCompaniesApi}
-            companies={companies}
-            setCompanies={setCompanies}
-        />
-
+        <>
+            <RejectionForm
+                candidateName={candidateName}
+                setCandidateName={setCandidateName}
+                companyName={companyName}
+                setCompanyName={setCompanyName}
+                generateRejection={generateRejection}
+                rejection={rejection}
+                tone={tone}
+                setTone={setTone}
+                searchCompaniesApi={searchCompaniesApi}
+                companies={companies}
+                setCompanies={setCompanies}
+            />
+            <ErrorPopup
+                message={error}
+                onClose={() => setError('')}
+            />
+        </>
     );
 };
 
