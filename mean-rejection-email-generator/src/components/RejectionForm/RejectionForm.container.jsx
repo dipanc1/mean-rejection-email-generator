@@ -63,7 +63,7 @@ const RejectionFormContainer = () => {
             await searchCompanies(query)
                 .then(data => {
                     setCompanies(data);
-                });
+                })
 
         } catch (error) {
             console.error('Error fetching companies:', error);

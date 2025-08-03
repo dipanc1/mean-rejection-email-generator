@@ -6,6 +6,11 @@ const AuthContainer = ({ isOpen, onClose, mode }) => {
     const modalRef = useRef();
     const [message, setMessage] = useState('');
 
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (modalRef.current && !modalRef.current.contains(event.target)) {
@@ -29,6 +34,7 @@ const AuthContainer = ({ isOpen, onClose, mode }) => {
                 if (response.success) {
                     // Handle successful login
                     localStorage.setItem('token', response.token);
+                    localStorage.setItem('user', JSON.stringify(response.user));
                     onClose();
                 } else {
                     // Handle login error
@@ -47,6 +53,7 @@ const AuthContainer = ({ isOpen, onClose, mode }) => {
                 if (response.success) {
                     // Handle successful registration
                     localStorage.setItem('token', response.token);
+                    localStorage.setItem('user', JSON.stringify(response.user));
                     setMessage(response.message);
                     onClose();
                 } else {
@@ -62,14 +69,8 @@ const AuthContainer = ({ isOpen, onClose, mode }) => {
     const onSubmit = (e) => {
         e.preventDefault();
         if (mode === 'login') {
-            const email = e.target.email.value;
-            const password = e.target.password.value;
             handleLogin(email, password);
         } else {
-            const firstName = e.target.firstName.value;
-            const lastName = e.target.lastName.value;
-            const email = e.target.email.value;
-            const password = e.target.password.value;
             handleRegister(firstName, lastName, email, password);
         }
     }
@@ -84,6 +85,15 @@ const AuthContainer = ({ isOpen, onClose, mode }) => {
             onRegister={handleRegister}
             message={message}
             onSubmit={onSubmit}
+
+            firstName={firstName}
+            setFirstName={setFirstName}
+            lastName={lastName}
+            setLastName={setLastName}
+            email={email}
+            setEmail={setEmail}
+            password={password}
+            setPassword={setPassword}
         />
     );
 };

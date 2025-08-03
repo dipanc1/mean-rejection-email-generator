@@ -13,6 +13,7 @@ const login = async (email, password) => {
         return data;
     } catch (error) {
         console.error('Error during login:', error);
+        return error;
     }
 }
 
@@ -29,6 +30,7 @@ const register = async (firstName, lastName, email, password) => {
         return data;
     } catch (error) {
         console.error('Error during registration:', error);
+        return error;
     }
 }
 

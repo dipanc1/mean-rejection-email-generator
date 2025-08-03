@@ -1,4 +1,4 @@
-const Auth = ({ isOpen, onClose, mode, modalRef, handleLogin, handleRegister, message, onSubmit }) => {
+const Auth = ({ isOpen, onClose, mode, modalRef, message, onSubmit, firstName, setFirstName, lastName, setLastName, email, setEmail, password, setPassword }) => {
     if (!isOpen) return null;
 
     return (
@@ -20,6 +20,8 @@ const Auth = ({ isOpen, onClose, mode, modalRef, handleLogin, handleRegister, me
                                 <label className="block text-sm font-medium mb-1">First Name</label>
                                 <input
                                     type="text"
+                                    value={firstName}
+                                    onChange={(e) => setFirstName(e.target.value)}
                                     className="w-full p-2 border rounded"
                                     placeholder="Enter your first name"
                                 />
@@ -28,6 +30,8 @@ const Auth = ({ isOpen, onClose, mode, modalRef, handleLogin, handleRegister, me
                                 <label className="block text-sm font-medium mb-1">Last Name</label>
                                 <input
                                     type="text"
+                                    value={lastName}
+                                    onChange={(e) => setLastName(e.target.value)}
                                     className="w-full p-2 border rounded"
                                     placeholder="Enter your last name"
                                 />
@@ -38,6 +42,8 @@ const Auth = ({ isOpen, onClose, mode, modalRef, handleLogin, handleRegister, me
                         <label className="block text-sm font-medium mb-1">Email</label>
                         <input
                             type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                             className="w-full p-2 border rounded"
                             placeholder="Enter your email"
                         />
@@ -46,6 +52,8 @@ const Auth = ({ isOpen, onClose, mode, modalRef, handleLogin, handleRegister, me
                         <label className="block text-sm font-medium mb-1">Password</label>
                         <input
                             type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
                             className="w-full p-2 border rounded"
                             placeholder="Enter your password"
                         />
