@@ -1,11 +1,11 @@
-const Auth = ({ isOpen, onClose, mode, modalRef, message, onSubmit, firstName, setFirstName, lastName, setLastName, email, setEmail, password, setPassword }) => {
+const Auth = ({ isOpen, handleClose, mode, modalRef, message, onSubmit, firstName, setFirstName, lastName, setLastName, email, setEmail, password, setPassword }) => {
     if (!isOpen) return null;
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div ref={modalRef} className="bg-white p-8 rounded-lg w-96 relative">
                 <button
-                    onClick={onClose}
+                    onClick={handleClose}
                     className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
                 >
                     ✕
@@ -66,9 +66,9 @@ const Auth = ({ isOpen, onClose, mode, modalRef, message, onSubmit, firstName, s
                     </button>
                 </form>
 
-                {message && (
-                    <div className="mt-4 p-2 bg-green-100 text-green-800 rounded">
-                        {message}
+                {message.text && (
+                    <div className={`mt-4 p-2 rounded ${message.type === 'error' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}`}>
+                        {message.text}
                     </div>
                 )}
             </div>

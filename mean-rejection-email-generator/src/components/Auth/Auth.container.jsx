@@ -4,17 +4,26 @@ import { login, register } from '../../api';
 
 const AuthContainer = ({ isOpen, onClose, mode }) => {
     const modalRef = useRef();
-    const [message, setMessage] = useState('');
+    const [message, setMessage] = useState({ text: '', type: '' });
 
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
+    const handleClose = () => {
+        setMessage({ text: '', type: '' });
+        setFirstName('');
+        setLastName('');
+        setEmail('');
+        setPassword('');
+        onClose();
+    }
+
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (modalRef.current && !modalRef.current.contains(event.target)) {
-                onClose();
+                handleClose();
             }
         };
 
@@ -28,6 +37,11 @@ const AuthContainer = ({ isOpen, onClose, mode }) => {
     }, [isOpen, onClose]);
 
     const handleLogin = (email, password) => {
+        if (!email || !password) {
+            setMessage({ text: 'Email and password are required', type: 'error' });
+            return;
+        }
+
         // Call the login API with loginData
         login(email, password)
             .then(response => {
@@ -37,16 +51,19 @@ const AuthContainer = ({ isOpen, onClose, mode }) => {
                     localStorage.setItem('user', JSON.stringify(response.user));
                     onClose();
                 } else {
-                    // Handle login error
-                    console.error('Login failed:', response.message);
+                    setMessage({ text: response.error, type: 'error' });
                 }
             })
             .catch(error => {
-                console.error('Error during login:', error);
+                setMessage({ text: 'Login failed', type: 'error' });
             });
     }
 
     const handleRegister = (firstName, lastName, email, password) => {
+        if (!firstName || !lastName || !email || !password) {
+            setMessage({ text: 'All fields are required', type: 'error' });
+            return;
+        }
         // Call the register API with registration data
         register(firstName, lastName, email, password)
             .then(response => {
@@ -54,20 +71,22 @@ const AuthContainer = ({ isOpen, onClose, mode }) => {
                     // Handle successful registration
                     localStorage.setItem('token', response.token);
                     localStorage.setItem('user', JSON.stringify(response.user));
-                    setMessage(response.message);
+                    setMessage({ text: 'Registration successful!', type: 'success' });
                     onClose();
                 } else {
                     // Handle registration error
-                    console.error('Registration failed:', response.message);
+                    setMessage({ text: response.error, type: 'error' });
                 }
             })
             .catch(error => {
-                console.error('Error during registration:', error);
+                setMessage({ text: 'Error during registration:', type: 'error' });
             });
     };
 
     const onSubmit = (e) => {
         e.preventDefault();
+        setMessage({ text: '', type: '' });
+
         if (mode === 'login') {
             handleLogin(email, password);
         } else {
@@ -78,7 +97,7 @@ const AuthContainer = ({ isOpen, onClose, mode }) => {
     return (
         <Auth
             isOpen={isOpen}
-            onClose={onClose}
+            handleClose={handleClose}
             mode={mode}
             modalRef={modalRef}
             onLogin={handleLogin}

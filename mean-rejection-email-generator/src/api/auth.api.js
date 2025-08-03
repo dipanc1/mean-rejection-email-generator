@@ -9,6 +9,9 @@ const login = async (email, password) => {
             },
             body: JSON.stringify({ email, password }),
         });
+        if (!response.ok) {
+            return { error: 'Login failed' };
+        }
         const data = await response.json();
         return data;
     } catch (error) {
@@ -26,6 +29,9 @@ const register = async (firstName, lastName, email, password) => {
             },
             body: JSON.stringify({ firstName, lastName, email, password }),
         });
+        if (!response.ok) {
+            return { error: 'Registration failed' };
+        }
         const data = await response.json();
         return data;
     } catch (error) {
