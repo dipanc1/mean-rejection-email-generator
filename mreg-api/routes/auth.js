@@ -5,8 +5,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 
-const UserTable = require('../models/User');
-const UserVerified = require('../models/UserVerified');
+const UserTable = require('../models/User.js');
+const UserVerified = require('../models/UserVerified.js');
 
 require('dotenv').config();
 
