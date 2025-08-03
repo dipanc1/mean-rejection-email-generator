@@ -9,6 +9,7 @@ const RejectionFormContainer = () => {
     const [companyName, setCompanyName] = useState('');
     const [rejection, setRejection] = useState('');
     const [tone, setTone] = useState(5);
+    const [copied, setCopied] = useState(false);
 
     const [companies, setCompanies] = useState([]);
     const [error, setError] = useState('');
@@ -76,6 +77,27 @@ const RejectionFormContainer = () => {
         setRejection(randomTemplate);
         setHasShownLoginPrompt(false);
         setError('');
+        setCopied(false); // Reset copy status when generating new email
+    };
+
+    const copyToClipboard = async () => {
+        try {
+            const emailContent = `Subject: Application Status Update\n\n${rejection}`;
+            await navigator.clipboard.writeText(emailContent);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        } catch (err) {
+            console.error('Failed to copy: ', err);
+            // Fallback for older browsers
+            const textArea = document.createElement('textarea');
+            textArea.value = `Subject: Application Status Update\n\n${rejection}`;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        }
     };
 
     const searchCompaniesApi = async (query) => {
@@ -116,6 +138,7 @@ const RejectionFormContainer = () => {
             localStorage.setItem('demoCount', '0');
             setCompanies([]);
             setRejection('');
+            setCopied(false);
         }
     }, [isLoggedIn]);
 
@@ -135,6 +158,8 @@ const RejectionFormContainer = () => {
                 setCompanies={setCompanies}
                 demoCount={demoCount}
                 demoLimit={DEMO_LIMIT}
+                copied={copied}
+                copyToClipboard={copyToClipboard}
             />
             <ErrorPopup
                 message={error}
