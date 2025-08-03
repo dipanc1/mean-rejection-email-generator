@@ -14,14 +14,14 @@ router.get('/', async (req, res) => {
         const searchRegex = new RegExp(query, 'i');
 
         const companies = await CompanyTable
-            .find({ name: searchRegex })
+            .find({ company_name: searchRegex })
             .limit(5);
 
         const uniqueCompanies = [];
-        const seenNames = new Set();
+        const seencompany_names = new Set();
         for (const company of companies) {
-            if (!seenNames.has(company.name)) {
-                seenNames.add(company.name);
+            if (!seencompany_names.has(company.company_name)) {
+                seencompany_names.add(company.company_name);
                 uniqueCompanies.push(company);
             }
         }
@@ -30,10 +30,10 @@ router.get('/', async (req, res) => {
             return res.status(404).json({ message: 'No companies found' });
         }
 
-        uniqueCompanies.sort((a, b) => a.name.localeCompare(b.name));
+        uniqueCompanies.sort((a, b) => a.company_name.localeCompare(b.company_name));
 
         uniqueCompanies.forEach(company => {
-            company.name = company.name
+            company.company_name = company.company_name
                 .split(' ')
                 .map(word => word.charAt(0).toUpperCase() + word.slice(1))
                 .join(' ');

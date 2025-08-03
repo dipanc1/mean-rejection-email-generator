@@ -56,11 +56,11 @@ const RejectionForm = ({
                                     key={index} 
                                     className="p-3 hover:bg-gray-100 cursor-pointer border-b last:border-b-0 text-sm" 
                                     onClick={() => {
-                                        setCompanyName(company.name)
+                                        setCompanyName(company.company_name)
                                         setCompanies([]);
                                     }}
                                 >
-                                    {company.name}
+                                    {company.company_name}
                                 </li>
                             ))}
                         </ul>
