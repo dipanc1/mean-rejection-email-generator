@@ -23,6 +23,9 @@ mongoose.connect(process.env.MONGODB_URI)
         console.error('MongoDB connection error:', error);
     });
 
+app.get('/api/health', (req, res) => {
+    res.status(200).json({ message: 'API is healthy' });
+});
 
 app.use('/api/auth', authRouter);
 app.use('/api/search-companies', protect, searchRouter);
