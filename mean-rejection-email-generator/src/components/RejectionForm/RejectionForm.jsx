@@ -9,8 +9,12 @@ const RejectionForm = ({
     setTone,
     searchCompaniesApi,
     companies,
-    setCompanies
+    setCompanies,
+    demoCount,
+    demoLimit
 }) => {
+    const isLoggedIn = localStorage.getItem('token');
+
     return (
         <div className="max-w-md mx-auto mt-10 p-6 bg-gray-100 rounded-lg shadow-lg">
             <h1 className="text-2xl font-bold mb-4 text-center">Mean Rejection Email Generator</h1>
@@ -50,13 +54,13 @@ const RejectionForm = ({
             </div>
             <button
                 onClick={generateRejection}
-                className="w-full bg-red-500 text-white p-2 rounded hover:bg-red-600"
+                className={`w-full ${isLoggedIn ? 'bg-red-500 hover:bg-red-600' : 'bg-blue-500 hover:bg-blue-600'} text-white p-2 rounded`}
             >
-                Generate Rejection
+                {isLoggedIn ? 'Generate Rejection' : `Generate Rejection (${demoLimit - demoCount} demos left)`}
             </button>
             {rejection && (
                 <div className="mt-4 p-4 bg-white border rounded">
-                    <p>{rejection}</p>
+                    <p className="whitespace-pre-line">{rejection}</p>
                 </div>
             )}
             <p className="mt-4 text-xs text-gray-500 text-center">
@@ -79,6 +83,15 @@ const RejectionForm = ({
                     (tone > 7 && <p className="text-red-500 text-xl text-center">Meanest</p>)
                 }
             </div>
+            {!isLoggedIn && (
+                <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded text-sm">
+                    <p className="text-yellow-700 text-center">
+                        You are in demo mode. {demoLimit - demoCount} attempts remaining.
+                        <br />
+                        Login to get unlimited rejections!
+                    </p>
+                </div>
+            )}
         </div>
     );
 };

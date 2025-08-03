@@ -1,4 +1,4 @@
-const Navbar = ({ isLoggedIn, handleLogin, handleRegister, user }) => {
+const Navbar = ({ isLoggedIn, handleLogin, handleRegister, user, handleLogout }) => {
     return (
         <nav className="bg-white shadow-lg">
             <div className="max-w-6xl mx-auto px-4">
@@ -26,7 +26,7 @@ const Navbar = ({ isLoggedIn, handleLogin, handleRegister, user }) => {
                         <div className="space-x-4">
                             <span className="text-gray-700">Hi, {user ? user.firstName : 'User'}</span>
                             <button
-                                onClick={handleLogin}
+                                onClick={handleLogout}
                                 className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md"
                             >
                                 Logout

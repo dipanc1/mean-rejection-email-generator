@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
+import { useAuth } from '../../context/AuthContext';
 import Navbar from './Navbar';
 import Auth from '../Auth';
 
 const NavbarContainer = () => {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [showAuth, setShowAuth] = useState(false);
     const [authMode, setAuthMode] = useState('login');
-    const [user, setUser] = useState(null);
+    const { isLoggedIn, setIsLoggedIn, user, setUser } = useAuth();
 
     const handleLogin = () => {
         if (isLoggedIn) {
@@ -24,8 +24,11 @@ const NavbarContainer = () => {
 
     const handleLogout = () => {
         setIsLoggedIn(false);
+        setUser(null);
         localStorage.removeItem('token');
         localStorage.removeItem('user');
+        localStorage.setItem('demoCount', '0');
+        setAuthMode('login');
     }
 
     useEffect(() => {

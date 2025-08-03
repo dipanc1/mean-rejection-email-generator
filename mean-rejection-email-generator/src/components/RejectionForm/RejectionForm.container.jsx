@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import RejectionForm from "./RejectionForm";
 import { searchCompanies } from "../../api";
 import ErrorPopup from "../ErrorPopup";
+import { useAuth } from '../../context/AuthContext';
 
 const RejectionFormContainer = () => {
     const [candidateName, setCandidateName] = useState('');
@@ -11,6 +12,15 @@ const RejectionFormContainer = () => {
 
     const [companies, setCompanies] = useState([]);
     const [error, setError] = useState('');
+    const [demoCount, setDemoCount] = useState(() => {
+        const count = localStorage.getItem('demoCount');
+        return count ? parseInt(count) : 0;
+    });
+    const [hasShownLoginPrompt, setHasShownLoginPrompt] = useState(false);
+
+    const { isLoggedIn } = useAuth();
+
+    const DEMO_LIMIT = 3;
 
     const meanTemplates = [
         "Dear CANDIDATE_NAME,\n\nWe got your application for COMPANY_NAME. It wasn’t good enough, so we’re picking other candidates.\n\nRegards,\nCOMPANY_NAME",
@@ -38,8 +48,14 @@ const RejectionFormContainer = () => {
 
         const token = localStorage.getItem('token');
         if (!token) {
-            setError('You must be logged in to generate a rejection email.');
-            return;
+            const currentCount = parseInt(localStorage.getItem('demoCount') || '0');
+            if (currentCount >= DEMO_LIMIT) {
+                setError(`You've used all ${DEMO_LIMIT} demo attempts. Please login to continue generating rejection emails.`);
+                return;
+            }
+            const newCount = currentCount + 1;
+            localStorage.setItem('demoCount', newCount.toString());
+            setDemoCount(newCount);
         }
 
         let templates;
@@ -58,6 +74,8 @@ const RejectionFormContainer = () => {
         setCandidateName('');
         setCompanyName('');
         setRejection(randomTemplate);
+        setHasShownLoginPrompt(false);
+        setError('');
     };
 
     const searchCompaniesApi = async (query) => {
@@ -69,9 +87,13 @@ const RejectionFormContainer = () => {
         try {
             setCompanyName(query);
             const token = localStorage.getItem('token');
+            if (!token && !hasShownLoginPrompt) {
+                setHasShownLoginPrompt(true);
+                setError('Please login to search companies');
+                return;
+            }
             if (!token) {
                 setCompanies([]);
-                setError('Please login to search companies');
                 return;
             }
             const data = await searchCompanies(query, token);
@@ -85,6 +107,14 @@ const RejectionFormContainer = () => {
         }
     }
 
+    useEffect(() => {
+        if (isLoggedIn) {
+            setDemoCount(0);
+            localStorage.setItem('demoCount', '0');
+            setCompanies([]);
+            setRejection('');
+        }
+    }, [isLoggedIn]);
 
     return (
         <>
@@ -100,6 +130,8 @@ const RejectionFormContainer = () => {
                 searchCompaniesApi={searchCompaniesApi}
                 companies={companies}
                 setCompanies={setCompanies}
+                demoCount={demoCount}
+                demoLimit={DEMO_LIMIT}
             />
             <ErrorPopup
                 message={error}
