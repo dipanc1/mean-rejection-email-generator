@@ -68,11 +68,11 @@ const AuthContainer = ({ isOpen, onClose, mode }) => {
         // Call the register API with registration data
         register(firstName, lastName, email, password)
             .then(response => {
-                if (response.success) {
+                if (response?.message?.length) {
                     // Handle successful registration
                     localStorage.setItem('token', response.token);
                     localStorage.setItem('user', JSON.stringify(response.user));
-                    setMessage({ text: 'Registration successful!', type: 'success' });
+                    setMessage({ text: response.message, type: 'success' });
                     onClose();
                 } else {
                     // Handle registration error
