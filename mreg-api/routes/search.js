@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const CompanyTable = require('../models/Companies.js');
+const CompanyTable = require('../models/companies')
 
 // Search companies based on text input
 router.get('/', async (req, res) => {
