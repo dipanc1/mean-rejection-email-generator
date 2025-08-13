@@ -34,6 +34,7 @@ const AuthContainer = ({ isOpen, onClose, mode }) => {
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isOpen, onClose]);
 
     const handleLogin = (email, password) => {

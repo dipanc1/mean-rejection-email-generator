@@ -44,6 +44,7 @@ const NavbarContainer = () => {
                 setUser(JSON.parse(userData));
             }
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [showAuth]);
 
 
