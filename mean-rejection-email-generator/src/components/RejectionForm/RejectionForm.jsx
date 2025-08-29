@@ -27,7 +27,7 @@ const RejectionForm = ({
             {/* Form Section */}
             <div className="bg-gray-100 rounded-lg shadow-lg p-5">
                 <h1 className="text-xl font-bold mb-5 text-center">Mean Rejection Email Generator</h1>
-                
+
                 <div className="mb-4">
                     <label className="block text-sm font-medium mb-2">Candidate Name</label>
                     <input
@@ -52,9 +52,9 @@ const RejectionForm = ({
                     {companies.length > 0 && (
                         <ul className="absolute top-full left-0 right-0 mt-1 bg-white border rounded-md shadow-lg z-50 max-h-36 overflow-y-auto">
                             {companies.map((company, index) => (
-                                <li 
-                                    key={index} 
-                                    className="p-3 hover:bg-gray-100 cursor-pointer border-b last:border-b-0 text-sm" 
+                                <li
+                                    key={index}
+                                    className="p-3 hover:bg-gray-100 cursor-pointer border-b last:border-b-0 text-sm"
                                     onClick={() => {
                                         setCompanyName(company.company_name)
                                         setCompanies([]);
@@ -114,11 +114,10 @@ const RejectionForm = ({
                     {rejection && (
                         <button
                             onClick={copyToClipboard}
-                            className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
-                                copied 
-                                    ? 'bg-green-100 text-green-700 border border-green-300' 
+                            className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${copied
+                                    ? 'bg-green-100 text-green-700 border border-green-300'
                                     : 'bg-blue-100 text-blue-700 border border-blue-300 hover:bg-blue-200'
-                            }`}
+                                }`}
                         >
                             {copied ? (
                                 <>
@@ -142,7 +141,7 @@ const RejectionForm = ({
                     <div className="bg-gray-50 border-l-4 border-red-500 p-4 rounded">
                         <div className="mb-3">
                             <span className="text-sm font-medium text-gray-600">Subject: </span>
-                            <span className="text-sm text-gray-800">Application Status Update</span>
+                            <span className="text-sm text-gray-800">Application Status Update - {companyName}</span>
                         </div>
                         <hr className="my-3" />
                         <div className="whitespace-pre-line text-gray-800 text-sm leading-relaxed">
