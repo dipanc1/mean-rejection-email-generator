@@ -173,7 +173,7 @@ const RejectionForm = ({
                     <div className="bg-gray-50 border-l-4 border-red-500 p-4 rounded">
                         <div className="mb-3">
                             <span className="text-sm font-medium text-gray-600">Subject: </span>
-                            <span className="text-sm text-gray-800">Application Status Update - {companyName}</span>
+                            <span className="text-sm text-gray-800">Application Status Update</span>
                         </div>
                         <hr className="my-3" />
                         <div className="whitespace-pre-line text-gray-800 text-sm leading-relaxed">

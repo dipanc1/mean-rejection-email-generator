@@ -76,7 +76,7 @@ const RejectionFormContainer = () => {
 
     const copyToClipboard = async () => {
         try {
-            const emailContent = `Subject: Application Status Update - ${companyName}\n\n${rejection}`;
+            const emailContent = `Subject: Application Status Update\n\n${rejection}`;
             await navigator.clipboard.writeText(emailContent);
             setCopied(true);
             setTimeout(() => setCopied(false), 2000);
@@ -84,7 +84,7 @@ const RejectionFormContainer = () => {
             console.error('Failed to copy: ', err);
             // Fallback for older browsers
             const textArea = document.createElement('textarea');
-            textArea.value = `Subject: Application Status Update - ${companyName}\n\n${rejection}`;
+            textArea.value = `Subject: Application Status Update\n\n${rejection}`;
             document.body.appendChild(textArea);
             textArea.select();
             document.execCommand('copy');
