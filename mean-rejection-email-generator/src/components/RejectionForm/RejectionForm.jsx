@@ -13,7 +13,9 @@ const RejectionForm = ({
     demoCount,
     demoLimit,
     copied,
-    copyToClipboard
+    copyToClipboard,
+    isGenerating,
+    isSearching
 }) => {
     const isLoggedIn = localStorage.getItem('token');
 
@@ -34,8 +36,9 @@ const RejectionForm = ({
                         type="text"
                         value={candidateName}
                         onChange={(e) => setCandidateName(e.target.value)}
-                        className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:bg-gray-100 disabled:cursor-not-allowed"
                         placeholder="e.g., John Doe"
+                        disabled={isGenerating}
                     />
                 </div>
 
@@ -45,11 +48,21 @@ const RejectionForm = ({
                         type="text"
                         value={companyName}
                         onChange={(e) => searchCompaniesApi(e.target.value)}
-                        className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:bg-gray-100 disabled:cursor-not-allowed"
                         placeholder="e.g., Acme Corp"
+                        disabled={isGenerating}
                     />
 
-                    {companies.length > 0 && (
+                    {isSearching && (
+                        <div className="absolute top-full left-0 right-0 mt-1 bg-white border rounded-md shadow-lg z-50 p-3">
+                            <div className="flex items-center justify-center">
+                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500"></div>
+                                <span className="ml-2 text-sm text-gray-600">Searching...</span>
+                            </div>
+                        </div>
+                    )}
+
+                    {companies.length > 0 && !isSearching && (
                         <ul className="absolute top-full left-0 right-0 mt-1 bg-white border rounded-md shadow-lg z-50 max-h-36 overflow-y-auto">
                             {companies.map((company, index) => (
                                 <li
@@ -73,9 +86,10 @@ const RejectionForm = ({
                         type="range"
                         min="1"
                         max="10"
-                        className="w-full mb-2"
+                        className="w-full mb-2 disabled:opacity-50 disabled:cursor-not-allowed"
                         onChange={(e) => setTone(e.target.value)}
                         value={tone}
+                        disabled={isGenerating}
                     />
                     <p className="text-xs text-gray-500 text-center mb-2">Adjust the tone of the rejection email</p>
                     <div className="text-center">
@@ -87,9 +101,24 @@ const RejectionForm = ({
 
                 <button
                     onClick={handleGenerateRejection}
-                    className={`w-full mb-4 ${isLoggedIn ? 'bg-red-500 hover:bg-red-600' : 'bg-blue-500 hover:bg-blue-600'} text-white p-3 rounded-md font-medium transition-colors duration-200`}
+                    disabled={isGenerating}
+                    className={`w-full mb-4 ${isGenerating
+                            ? 'bg-gray-400 cursor-not-allowed'
+                            : isLoggedIn
+                                ? 'bg-red-500 hover:bg-red-600'
+                                : 'bg-blue-500 hover:bg-blue-600'
+                        } text-white p-3 rounded-md font-medium transition-colors duration-200 flex items-center justify-center`}
                 >
-                    {isLoggedIn ? 'Generate Rejection' : `Generate Rejection (${demoLimit - demoCount} demos left)`}
+                    {isGenerating ? (
+                        <>
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                            Generating...
+                        </>
+                    ) : (
+                        isLoggedIn
+                            ? 'Generate Rejection'
+                            : `Generate Rejection (${demoLimit - demoCount} demos left)`
+                    )}
                 </button>
 
                 {!isLoggedIn && (
@@ -114,9 +143,12 @@ const RejectionForm = ({
                     {rejection && (
                         <button
                             onClick={copyToClipboard}
-                            className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${copied
-                                    ? 'bg-green-100 text-green-700 border border-green-300'
-                                    : 'bg-blue-100 text-blue-700 border border-blue-300 hover:bg-blue-200'
+                            disabled={isGenerating}
+                            className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${isGenerating
+                                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                                    : copied
+                                        ? 'bg-green-100 text-green-700 border border-green-300'
+                                        : 'bg-blue-100 text-blue-700 border border-blue-300 hover:bg-blue-200'
                                 }`}
                         >
                             {copied ? (

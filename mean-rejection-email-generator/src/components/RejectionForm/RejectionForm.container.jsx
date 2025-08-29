@@ -19,6 +19,9 @@ const RejectionFormContainer = () => {
     });
     const [hasShownLoginPrompt, setHasShownLoginPrompt] = useState(false);
 
+    const [isGenerating, setIsGenerating] = useState(false);
+    const [isSearching, setIsSearching] = useState(false);
+
     const { isLoggedIn, setIsLoggedIn, setUser } = useAuth();
 
     const DEMO_LIMIT = 3;
@@ -35,11 +38,14 @@ const RejectionFormContainer = () => {
             return;
         }
 
+        setIsGenerating(true);
+
         const token = localStorage.getItem('token');
         if (!token) {
             const currentCount = parseInt(localStorage.getItem('demoCount') || '0');
             if (currentCount >= DEMO_LIMIT) {
                 setError(`You've used all ${DEMO_LIMIT} demo attempts. Please login to continue generating rejection emails.`);
+                setIsGenerating(false);
                 return;
             }
             const newCount = currentCount + 1;
@@ -65,7 +71,8 @@ const RejectionFormContainer = () => {
         setRejection(randomTemplate);
         setHasShownLoginPrompt(false);
         setError('');
-        setCopied(false); // Reset copy status when generating new email
+        setCopied(false);
+        setIsGenerating(false);
     };
 
     const copyToClipboard = async () => {
@@ -94,6 +101,7 @@ const RejectionFormContainer = () => {
             setCompanyName('');
             return;
         }
+        setIsSearching(true);
         try {
             setCompanyName(query);
             const token = localStorage.getItem('token');
@@ -101,22 +109,27 @@ const RejectionFormContainer = () => {
                 setHasShownLoginPrompt(true);
                 setCompanies([]);
                 setError('Please login to search companies');
+                setIsSearching(false);
                 return;
             }
             if (!token) {
                 setCompanies([]);
+                setIsSearching(false);
                 return;
             }
             const data = await searchCompanies(query, token);
             if (data.error === 'Unauthorized') {
                 setCompanies([]);
                 setError('Your session has expired. Please login again.');
+                setIsSearching(false);
                 return;
             }
             setCompanies(data);
         } catch (error) {
             setCompanies([]);
             setError('An error occurred while fetching companies');
+        } finally {
+            setIsSearching(false);
         }
     }
 
@@ -159,6 +172,8 @@ const RejectionFormContainer = () => {
                 demoLimit={DEMO_LIMIT}
                 copied={copied}
                 copyToClipboard={copyToClipboard}
+                isGenerating={isGenerating}
+                isSearching={isSearching}
             />
             <ErrorPopup
                 message={error}

@@ -1,4 +1,4 @@
-const Auth = ({ isOpen, handleClose, mode, modalRef, message, onSubmit, firstName, setFirstName, lastName, setLastName, email, setEmail, password, setPassword }) => {
+const Auth = ({ isOpen, handleClose, mode, modalRef, message, onSubmit, firstName, setFirstName, lastName, setLastName, email, setEmail, password, setPassword, isLoading }) => {
     if (!isOpen) return null;
 
     return (
@@ -6,7 +6,8 @@ const Auth = ({ isOpen, handleClose, mode, modalRef, message, onSubmit, firstNam
             <div ref={modalRef} className="bg-white p-8 rounded-lg w-96 relative">
                 <button
                     onClick={handleClose}
-                    className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+                    className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 disabled:opacity-50"
+                    disabled={isLoading}
                 >
                     ✕
                 </button>
@@ -22,8 +23,9 @@ const Auth = ({ isOpen, handleClose, mode, modalRef, message, onSubmit, firstNam
                                     type="text"
                                     value={firstName}
                                     onChange={(e) => setFirstName(e.target.value)}
-                                    className="w-full p-2 border rounded"
+                                    className="w-full p-2 border rounded disabled:bg-gray-100 disabled:cursor-not-allowed"
                                     placeholder="Enter your first name"
+                                    disabled={isLoading}
                                 />
                             </div>
                             <div>
@@ -32,8 +34,9 @@ const Auth = ({ isOpen, handleClose, mode, modalRef, message, onSubmit, firstNam
                                     type="text"
                                     value={lastName}
                                     onChange={(e) => setLastName(e.target.value)}
-                                    className="w-full p-2 border rounded"
+                                    className="w-full p-2 border rounded disabled:bg-gray-100 disabled:cursor-not-allowed"
                                     placeholder="Enter your last name"
+                                    disabled={isLoading}
                                 />
                             </div>
                         </>
@@ -44,8 +47,9 @@ const Auth = ({ isOpen, handleClose, mode, modalRef, message, onSubmit, firstNam
                             type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="w-full p-2 border rounded"
+                            className="w-full p-2 border rounded disabled:bg-gray-100 disabled:cursor-not-allowed"
                             placeholder="Enter your email"
+                            disabled={isLoading}
                         />
                     </div>
                     <div>
@@ -54,15 +58,24 @@ const Auth = ({ isOpen, handleClose, mode, modalRef, message, onSubmit, firstNam
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="w-full p-2 border rounded"
+                            className="w-full p-2 border rounded disabled:bg-gray-100 disabled:cursor-not-allowed"
                             placeholder="Enter your password"
+                            disabled={isLoading}
                         />
                     </div>
                     <button
                         type="submit"
-                        className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+                        disabled={isLoading}
+                        className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center"
                     >
-                        {mode === 'login' ? 'Login' : 'Register'}
+                        {isLoading ? (
+                            <>
+                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                                {mode === 'login' ? 'Logging in...' : 'Registering...'}
+                            </>
+                        ) : (
+                            mode === 'login' ? 'Login' : 'Register'
+                        )}
                     </button>
                 </form>
 

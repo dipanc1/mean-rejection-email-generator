@@ -5,6 +5,7 @@ import { login, register } from '../../api';
 const AuthContainer = ({ isOpen, onClose, mode }) => {
     const modalRef = useRef();
     const [message, setMessage] = useState({ text: '', type: '' });
+    const [isLoading, setIsLoading] = useState(false);
 
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -34,7 +35,7 @@ const AuthContainer = ({ isOpen, onClose, mode }) => {
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isOpen, onClose]);
 
     const handleLogin = (email, password) => {
@@ -43,11 +44,11 @@ const AuthContainer = ({ isOpen, onClose, mode }) => {
             return;
         }
 
-        // Call the login API with loginData
+        setIsLoading(true);
+
         login(email, password)
             .then(response => {
                 if (response.success) {
-                    // Handle successful login
                     localStorage.setItem('token', response.token);
                     localStorage.setItem('user', JSON.stringify(response.user));
                     onClose();
@@ -57,15 +58,20 @@ const AuthContainer = ({ isOpen, onClose, mode }) => {
             })
             .catch(error => {
                 setMessage({ text: 'Login failed', type: 'error' });
+            })
+            .finally(() => {
+                setIsLoading(false);
             });
-    }
+    };
 
     const handleRegister = (firstName, lastName, email, password) => {
         if (!firstName || !lastName || !email || !password) {
             setMessage({ text: 'All fields are required', type: 'error' });
             return;
         }
-        // Call the register API with registration data
+
+        setIsLoading(true);
+
         register(firstName, lastName, email, password)
             .then(response => {
                 if (response?.message?.length) {
@@ -75,12 +81,14 @@ const AuthContainer = ({ isOpen, onClose, mode }) => {
                     setPassword('');
                     setMessage({ text: response.message, type: 'success' });
                 } else {
-                    // Handle registration error
                     setMessage({ text: response.error, type: 'error' });
                 }
             })
             .catch(error => {
                 setMessage({ text: 'Error during registration:', type: 'error' });
+            })
+            .finally(() => {
+                setIsLoading(false);
             });
     };
 
@@ -105,7 +113,7 @@ const AuthContainer = ({ isOpen, onClose, mode }) => {
             onRegister={handleRegister}
             message={message}
             onSubmit={onSubmit}
-
+            isLoading={isLoading}
             firstName={firstName}
             setFirstName={setFirstName}
             lastName={lastName}
