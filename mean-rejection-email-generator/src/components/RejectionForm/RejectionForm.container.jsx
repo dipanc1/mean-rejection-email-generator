@@ -19,7 +19,7 @@ const RejectionFormContainer = () => {
     });
     const [hasShownLoginPrompt, setHasShownLoginPrompt] = useState(false);
 
-    const { isLoggedIn } = useAuth();
+    const { isLoggedIn, setIsLoggedIn, setUser } = useAuth();
 
     const DEMO_LIMIT = 3;
 
@@ -99,7 +99,7 @@ const RejectionFormContainer = () => {
             const token = localStorage.getItem('token');
             if (!token && !hasShownLoginPrompt) {
                 setHasShownLoginPrompt(true);
-                setCompanies([]); // Clear dropdown before showing error
+                setCompanies([]);
                 setError('Please login to search companies');
                 return;
             }
@@ -109,16 +109,27 @@ const RejectionFormContainer = () => {
             }
             const data = await searchCompanies(query, token);
             if (data.error === 'Unauthorized') {
-                setCompanies([]); // Clear dropdown before showing error
+                setCompanies([]);
                 setError('Your session has expired. Please login again.');
                 return;
             }
             setCompanies(data);
         } catch (error) {
-            setCompanies([]); // Clear dropdown before showing error
+            setCompanies([]);
             setError('An error occurred while fetching companies');
         }
     }
+
+    const handleErrorClose = () => {
+        if (error === 'Your session has expired. Please login again.') {
+            setIsLoggedIn(false);
+            setUser(null);
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            localStorage.setItem('demoCount', '0');
+        }
+        setError('');
+    };
 
     useEffect(() => {
         if (isLoggedIn) {
@@ -151,7 +162,7 @@ const RejectionFormContainer = () => {
             />
             <ErrorPopup
                 message={error}
-                onClose={() => setError('')}
+                onClose={handleErrorClose}
             />
         </>
     );
