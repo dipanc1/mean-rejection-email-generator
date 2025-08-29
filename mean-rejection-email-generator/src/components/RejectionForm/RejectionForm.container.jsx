@@ -66,7 +66,6 @@ const RejectionFormContainer = () => {
             .replace(/CANDIDATE_NAME/g, candidateName)
             .replace(/COMPANY_NAME/g, companyName);
 
-        setCandidateName('');
         setCompanyName('');
         setRejection(randomTemplate);
         setHasShownLoginPrompt(false);
